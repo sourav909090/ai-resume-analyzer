@@ -11,7 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # =========================================================
-# PAGE
+# PAGE CONFIG
 # =========================================================
 
 st.set_page_config(
@@ -22,14 +22,14 @@ st.set_page_config(
 
 
 # =========================================================
-# DARK UI
+# DARK + COLOURFUL UI
 # =========================================================
 
 st.markdown("""
 <style>
 
 .stApp {
-    background: #0b0f19;
+    background-color: #0b0f19;
     color: #f5f7ff;
 }
 
@@ -39,58 +39,40 @@ st.markdown("""
 }
 
 .hero {
-    background: linear-gradient(135deg, #111827, #1e1b4b);
-    border: 1px solid #3730a3;
-    padding: 30px;
+    background: linear-gradient(135deg, #111827, #312e81);
+    border: 1px solid #6366f1;
+    padding: 28px;
     border-radius: 18px;
     margin-bottom: 25px;
 }
 
 .hero h1 {
-    color: #ffffff;
+    color: white;
     font-size: 38px;
-    margin-bottom: 8px;
+    margin: 0;
 }
 
 .hero p {
     color: #cbd5e1;
     font-size: 16px;
+    margin-top: 8px;
 }
 
 .section-title {
-    color: #ffffff;
+    color: white;
     font-size: 24px;
     font-weight: 700;
     margin-top: 28px;
     margin-bottom: 14px;
 }
 
-.score-card {
-    background: linear-gradient(135deg, #111827, #17133b);
-    border: 1px solid #6366f1;
+.score-box {
+    background: linear-gradient(135deg, #111827, #1e1b4b);
+    border: 2px solid #6366f1;
     border-radius: 18px;
-    padding: 25px;
-    text-align: center;
-    margin: 15px 0 25px 0;
-}
-
-.score-label {
-    color: #cbd5e1;
-    font-size: 17px;
-}
-
-.score-value {
-    color: #818cf8;
-    font-size: 46px;
-    font-weight: 800;
-    margin-top: 5px;
-}
-
-.info-card {
-    background: #111827;
-    border: 1px solid #273244;
-    border-radius: 15px;
     padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .skill-found {
@@ -102,6 +84,7 @@ st.markdown("""
     border-radius: 20px;
     margin: 4px;
     font-size: 14px;
+    font-weight: 600;
 }
 
 .skill-missing {
@@ -113,6 +96,7 @@ st.markdown("""
     border-radius: 20px;
     margin: 4px;
     font-size: 14px;
+    font-weight: 600;
 }
 
 .skill-required {
@@ -124,6 +108,7 @@ st.markdown("""
     border-radius: 20px;
     margin: 4px;
     font-size: 14px;
+    font-weight: 600;
 }
 
 .footer {
@@ -160,11 +145,13 @@ with st.sidebar:
 
     st.header("⚙️ Resume Analyzer")
 
-    st.write("Upload a resume and paste a target job description.")
+    st.write(
+        "Upload your resume and paste the target job description."
+    )
 
     st.divider()
 
-    st.write("### Features")
+    st.write("### 🚀 Features")
 
     st.write("📊 Resume Match Score")
     st.write("🎯 Skill Gap Analysis")
@@ -199,7 +186,7 @@ with col2:
 
 
 # =========================================================
-# SKILLS
+# SKILL DATABASE
 # =========================================================
 
 skills = [
@@ -242,7 +229,7 @@ skills = [
 
 
 # =========================================================
-# SKILL CHECK
+# SKILL DETECTION
 # =========================================================
 
 def contains_skill(text, skill):
@@ -256,7 +243,7 @@ def contains_skill(text, skill):
 
 
 # =========================================================
-# PDF EXTRACTION + OCR
+# PDF + OCR
 # =========================================================
 
 def extract_resume_text(pdf_bytes):
@@ -298,7 +285,7 @@ def extract_resume_text(pdf_bytes):
 
 
 # =========================================================
-# TESSERACT
+# TESSERACT CONFIG
 # =========================================================
 
 tesseract_path = shutil.which("tesseract")
@@ -317,7 +304,7 @@ elif os.path.exists(windows_tesseract):
 
 
 # =========================================================
-# ANALYZE
+# ANALYZE BUTTON
 # =========================================================
 
 if st.button(
@@ -327,17 +314,17 @@ if st.button(
 
     if uploaded_file is None:
 
-        st.warning("Please upload a resume PDF.")
+        st.warning("⚠️ Please upload a resume PDF.")
         st.stop()
 
     if not job_description.strip():
 
-        st.warning("Please paste a job description.")
+        st.warning("⚠️ Please paste a job description.")
         st.stop()
 
 
     # =====================================================
-    # EXTRACT
+    # EXTRACT RESUME TEXT
     # =====================================================
 
     try:
@@ -349,7 +336,7 @@ if st.button(
     except Exception as e:
 
         st.error(
-            f"Could not read the PDF: {e}"
+            f"❌ Could not read the PDF: {e}"
         )
 
         st.stop()
@@ -358,7 +345,7 @@ if st.button(
     if not resume_text.strip():
 
         st.error(
-            "Could not extract text from this PDF."
+            "❌ Could not extract text from this PDF."
         )
 
         st.stop()
@@ -382,7 +369,7 @@ if st.button(
 
 
     # =====================================================
-    # TF-IDF SIMILARITY
+    # TF-IDF TEXT SIMILARITY
     # =====================================================
 
     try:
@@ -410,21 +397,24 @@ if st.button(
 
 
     # =====================================================
-    # SKILLS
+    # FIND SKILLS
     # =====================================================
 
     resume_skills = [
-        skill for skill in skills
+        skill
+        for skill in skills
         if contains_skill(resume_text, skill)
     ]
 
     required_skills = [
-        skill for skill in skills
+        skill
+        for skill in skills
         if contains_skill(job_description, skill)
     ]
 
     missing_skills = [
-        skill for skill in required_skills
+        skill
+        for skill in required_skills
         if skill not in resume_skills
     ]
 
@@ -436,7 +426,8 @@ if st.button(
     if required_skills:
 
         matched_skills = [
-            skill for skill in required_skills
+            skill
+            for skill in required_skills
             if skill in resume_skills
         ]
 
@@ -476,20 +467,14 @@ if st.button(
     # KEYWORD COVERAGE
     # =====================================================
 
-    if required_skills:
-
-        keyword_coverage = round(
-            skill_score,
-            2
-        )
-
-    else:
-
-        keyword_coverage = 0
+    keyword_coverage = round(
+        skill_score,
+        2
+    )
 
 
     # =====================================================
-    # STATISTICS
+    # RESUME STATISTICS
     # =====================================================
 
     word_count = len(
@@ -502,7 +487,7 @@ if st.button(
 
 
     # =====================================================
-    # SECTIONS
+    # RESUME SECTIONS
     # =====================================================
 
     possible_sections = [
@@ -525,7 +510,7 @@ if st.button(
 
 
     # =====================================================
-    # RESULTS
+    # ANALYSIS RESULTS
     # =====================================================
 
     st.markdown(
@@ -535,24 +520,32 @@ if st.button(
 
 
     # =====================================================
-    # SCORE
+    # RESUME MATCH SCORE
     # =====================================================
 
     st.markdown(
-        f"""
-        <div class="score-card">
-            <div class="score-label">
-                Resume Match Score
-            </div>
-
-            <div class="score-value">
-                {final_score}%
-            </div>
-        </div>
-        """,
+        '<div class="score-box">',
         unsafe_allow_html=True
     )
 
+    st.write("### 📊 Resume Match Score")
+
+    st.metric(
+        "Overall Match",
+        f"{final_score}%"
+    )
+
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+
+    # =====================================================
+    # PROGRESS
+    # =====================================================
+
+    st.write("### 🎯 Match Progress")
 
     st.progress(
         min(final_score / 100, 1.0)
@@ -560,7 +553,7 @@ if st.button(
 
 
     # =====================================================
-    # METRICS
+    # FOUR MAIN METRICS
     # =====================================================
 
     m1, m2, m3, m4 = st.columns(4)
@@ -610,9 +603,9 @@ if st.button(
         for skill in resume_skills:
 
             html += (
-                f'<span class="skill-found">'
-                f'{skill}'
-                f'</span>'
+                '<span class="skill-found">'
+                + skill +
+                '</span>'
             )
 
         st.markdown(
@@ -643,9 +636,9 @@ if st.button(
         for skill in required_skills:
 
             html += (
-                f'<span class="skill-required">'
-                f'{skill}'
-                f'</span>'
+                '<span class="skill-required">'
+                + skill +
+                '</span>'
             )
 
         st.markdown(
@@ -661,7 +654,7 @@ if st.button(
 
 
     # =====================================================
-    # MISSING
+    # MISSING SKILLS
     # =====================================================
 
     st.markdown(
@@ -676,9 +669,9 @@ if st.button(
         for skill in missing_skills:
 
             html += (
-                f'<span class="skill-missing">'
-                f'{skill}'
-                f'</span>'
+                '<span class="skill-missing">'
+                + skill +
+                '</span>'
             )
 
         st.markdown(
@@ -694,7 +687,7 @@ if st.button(
 
 
     # =====================================================
-    # STATISTICS
+    # RESUME STATISTICS
     # =====================================================
 
     st.markdown(
@@ -749,7 +742,7 @@ if st.button(
 
 
     # =====================================================
-    # SUGGESTIONS
+    # IMPROVEMENT SUGGESTIONS
     # =====================================================
 
     st.markdown(
@@ -810,7 +803,7 @@ if st.button(
 
 
     # =====================================================
-    # RECOMMENDATION
+    # OVERALL RECOMMENDATION
     # =====================================================
 
     st.markdown(
@@ -840,7 +833,7 @@ if st.button(
 
 
     # =====================================================
-    # REPORT
+    # DOWNLOAD REPORT
     # =====================================================
 
     report = f"""
