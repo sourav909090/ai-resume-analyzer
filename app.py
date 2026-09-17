@@ -11,7 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # =========================================================
-# PAGE CONFIG
+# PAGE
 # =========================================================
 
 st.set_page_config(
@@ -22,122 +22,115 @@ st.set_page_config(
 
 
 # =========================================================
-# CUSTOM CSS
+# DARK UI
 # =========================================================
 
 st.markdown("""
 <style>
 
 .stApp {
-    background: linear-gradient(135deg, #f8fbff 0%, #ffffff 55%, #f5f3ff 100%);
+    background: #0b0f19;
+    color: #f5f7ff;
 }
 
-/* Main header */
+.block-container {
+    max-width: 1200px;
+    padding-top: 2rem;
+}
+
 .hero {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    padding: 28px 32px;
+    background: linear-gradient(135deg, #111827, #1e1b4b);
+    border: 1px solid #3730a3;
+    padding: 30px;
     border-radius: 18px;
-    color: white;
     margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.18);
 }
 
 .hero h1 {
-    margin: 0;
+    color: #ffffff;
     font-size: 38px;
+    margin-bottom: 8px;
 }
 
 .hero p {
-    margin: 8px 0 0 0;
+    color: #cbd5e1;
     font-size: 16px;
-    opacity: 0.92;
 }
 
-/* Cards */
-.card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    margin-bottom: 15px;
+.section-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 28px;
+    margin-bottom: 14px;
 }
 
-/* Score */
 .score-card {
-    background: linear-gradient(135deg, #eef2ff, #f5f3ff);
-    border: 2px solid #c7d2fe;
+    background: linear-gradient(135deg, #111827, #17133b);
+    border: 1px solid #6366f1;
     border-radius: 18px;
-    padding: 24px;
+    padding: 25px;
     text-align: center;
     margin: 15px 0 25px 0;
 }
 
 .score-label {
-    color: #4b5563;
-    font-size: 16px;
-    font-weight: 600;
+    color: #cbd5e1;
+    font-size: 17px;
 }
 
 .score-value {
-    color: #4f46e5;
-    font-size: 42px;
+    color: #818cf8;
+    font-size: 46px;
     font-weight: 800;
     margin-top: 5px;
 }
 
-/* Section headings */
-.section-title {
-    font-size: 24px;
-    font-weight: 750;
-    margin-top: 28px;
-    margin-bottom: 14px;
-    color: #111827;
+.info-card {
+    background: #111827;
+    border: 1px solid #273244;
+    border-radius: 15px;
+    padding: 20px;
 }
 
-/* Skill pills */
 .skill-found {
     display: inline-block;
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+    background: #052e1b;
+    color: #4ade80;
+    border: 1px solid #166534;
     padding: 7px 12px;
     border-radius: 20px;
     margin: 4px;
     font-size: 14px;
-    font-weight: 600;
 }
 
 .skill-missing {
     display: inline-block;
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background: #3b1111;
+    color: #f87171;
+    border: 1px solid #991b1b;
     padding: 7px 12px;
     border-radius: 20px;
     margin: 4px;
     font-size: 14px;
-    font-weight: 600;
 }
 
 .skill-required {
     display: inline-block;
-    background: #dbeafe;
-    color: #1e40af;
-    border: 1px solid #bfdbfe;
+    background: #172554;
+    color: #60a5fa;
+    border: 1px solid #1d4ed8;
     padding: 7px 12px;
     border-radius: 20px;
     margin: 4px;
     font-size: 14px;
-    font-weight: 600;
 }
 
-/* Footer */
 .footer {
     text-align: center;
-    color: #6b7280;
-    padding: 25px;
-    margin-top: 35px;
+    color: #64748b;
+    padding: 30px;
+    margin-top: 40px;
 }
 
 </style>
@@ -152,8 +145,8 @@ st.markdown("""
 <div class="hero">
     <h1>📄 AI-Powered Resume Analyzer</h1>
     <p>
-        Analyze your resume against a job description,
-        identify skill gaps and understand your resume-job match.
+        Compare your resume with a job description,
+        measure compatibility and identify important skill gaps.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -165,15 +158,13 @@ st.markdown("""
 
 with st.sidebar:
 
-    st.header("⚙️ Analyzer")
+    st.header("⚙️ Resume Analyzer")
 
-    st.write(
-        "Upload your resume and enter the target job description."
-    )
+    st.write("Upload a resume and paste a target job description.")
 
     st.divider()
 
-    st.write("### 🚀 Features")
+    st.write("### Features")
 
     st.write("📊 Resume Match Score")
     st.write("🎯 Skill Gap Analysis")
@@ -181,12 +172,12 @@ with st.sidebar:
     st.write("📈 Resume Statistics")
     st.write("📑 Section Detection")
     st.write("💡 Improvement Suggestions")
-    st.write("🖨️ OCR for Scanned PDFs")
+    st.write("🖨️ OCR Support")
     st.write("📥 Download Report")
 
 
 # =========================================================
-# INPUT SECTION
+# INPUT
 # =========================================================
 
 col1, col2 = st.columns(2)
@@ -201,14 +192,14 @@ with col1:
 with col2:
 
     job_description = st.text_area(
-        "💼 Paste Job Description",
+        "💼 Job Description",
         height=220,
-        placeholder="Paste the complete job description here..."
+        placeholder="Paste the job description here..."
     )
 
 
 # =========================================================
-# SKILLS DATABASE
+# SKILLS
 # =========================================================
 
 skills = [
@@ -251,7 +242,7 @@ skills = [
 
 
 # =========================================================
-# SKILL DETECTION
+# SKILL CHECK
 # =========================================================
 
 def contains_skill(text, skill):
@@ -259,13 +250,13 @@ def contains_skill(text, skill):
     text = text.lower()
     skill = skill.lower()
 
-    pattern = r"\b" + re.escape(skill) + r"\b"
+    pattern = r"(?<!\w)" + re.escape(skill) + r"(?!\w)"
 
     return re.search(pattern, text) is not None
 
 
 # =========================================================
-# PDF + OCR
+# PDF EXTRACTION + OCR
 # =========================================================
 
 def extract_resume_text(pdf_bytes):
@@ -307,7 +298,7 @@ def extract_resume_text(pdf_bytes):
 
 
 # =========================================================
-# TESSERACT CONFIG
+# TESSERACT
 # =========================================================
 
 tesseract_path = shutil.which("tesseract")
@@ -336,31 +327,29 @@ if st.button(
 
     if uploaded_file is None:
 
-        st.warning("⚠️ Please upload a resume PDF.")
-
+        st.warning("Please upload a resume PDF.")
         st.stop()
 
     if not job_description.strip():
 
-        st.warning("⚠️ Please paste a job description.")
-
+        st.warning("Please paste a job description.")
         st.stop()
 
 
-    # -----------------------------------------------------
-    # Extract text
-    # -----------------------------------------------------
+    # =====================================================
+    # EXTRACT
+    # =====================================================
 
     try:
 
-        pdf_bytes = uploaded_file.getvalue()
-
-        resume_text = extract_resume_text(pdf_bytes)
+        resume_text = extract_resume_text(
+            uploaded_file.getvalue()
+        )
 
     except Exception as e:
 
         st.error(
-            f"❌ Could not read the PDF: {e}"
+            f"Could not read the PDF: {e}"
         )
 
         st.stop()
@@ -369,79 +358,128 @@ if st.button(
     if not resume_text.strip():
 
         st.error(
-            "❌ Could not extract any text from this PDF."
+            "Could not extract text from this PDF."
         )
 
         st.stop()
 
 
-    # -----------------------------------------------------
-    # TF-IDF similarity
-    # -----------------------------------------------------
+    # =====================================================
+    # CLEAN TEXT
+    # =====================================================
 
-    documents = [
-        resume_text,
-        job_description
-    ]
+    resume_clean = re.sub(
+        r"\s+",
+        " ",
+        resume_text.lower()
+    ).strip()
 
-    vectorizer = TfidfVectorizer(
-        stop_words="english"
-    )
-
-    vectors = vectorizer.fit_transform(
-        documents
-    )
-
-    similarity = cosine_similarity(
-        vectors[0:1],
-        vectors[1:2]
-    )
-
-    score = round(
-        similarity[0][0] * 100,
-        2
-    )
+    jd_clean = re.sub(
+        r"\s+",
+        " ",
+        job_description.lower()
+    ).strip()
 
 
-    # -----------------------------------------------------
-    # Skills
-    # -----------------------------------------------------
+    # =====================================================
+    # TF-IDF SIMILARITY
+    # =====================================================
+
+    try:
+
+        vectorizer = TfidfVectorizer(
+            stop_words="english",
+            ngram_range=(1, 2),
+            sublinear_tf=True
+        )
+
+        vectors = vectorizer.fit_transform(
+            [resume_clean, jd_clean]
+        )
+
+        similarity = cosine_similarity(
+            vectors[0:1],
+            vectors[1:2]
+        )[0][0]
+
+        text_score = similarity * 100
+
+    except Exception:
+
+        text_score = 0
+
+
+    # =====================================================
+    # SKILLS
+    # =====================================================
 
     resume_skills = [
-        skill
-        for skill in skills
+        skill for skill in skills
         if contains_skill(resume_text, skill)
     ]
 
     required_skills = [
-        skill
-        for skill in skills
+        skill for skill in skills
         if contains_skill(job_description, skill)
     ]
 
     missing_skills = [
-        skill
-        for skill in required_skills
+        skill for skill in required_skills
         if skill not in resume_skills
     ]
 
 
-    # -----------------------------------------------------
-    # Keyword Coverage
-    # -----------------------------------------------------
+    # =====================================================
+    # SKILL SCORE
+    # =====================================================
 
     if required_skills:
 
-        matched_count = len(
-            [
-                skill
-                for skill in required_skills
-                if skill in resume_skills
-            ]
+        matched_skills = [
+            skill for skill in required_skills
+            if skill in resume_skills
+        ]
+
+        skill_score = (
+            len(matched_skills)
+            / len(required_skills)
+        ) * 100
+
+    else:
+
+        skill_score = 0
+
+
+    # =====================================================
+    # FINAL MATCH SCORE
+    # =====================================================
+
+    if required_skills:
+
+        final_score = (
+            (text_score * 0.60)
+            + (skill_score * 0.40)
         )
 
+    else:
+
+        final_score = text_score
+
+
+    final_score = round(
+        min(max(final_score, 0), 100),
+        2
+    )
+
+
+    # =====================================================
+    # KEYWORD COVERAGE
+    # =====================================================
+
+    if required_skills:
+
         keyword_coverage = round(
-            (matched_count / len(required_skills)) * 100,
+            skill_score,
             2
         )
 
@@ -450,20 +488,22 @@ if st.button(
         keyword_coverage = 0
 
 
-    # -----------------------------------------------------
-    # Resume Statistics
-    # -----------------------------------------------------
+    # =====================================================
+    # STATISTICS
+    # =====================================================
 
-    words = resume_text.split()
+    word_count = len(
+        resume_text.split()
+    )
 
-    word_count = len(words)
+    character_count = len(
+        resume_text
+    )
 
-    character_count = len(resume_text)
 
-
-    # -----------------------------------------------------
-    # Section Detection
-    # -----------------------------------------------------
+    # =====================================================
+    # SECTIONS
+    # =====================================================
 
     possible_sections = [
         "education",
@@ -480,7 +520,7 @@ if st.button(
     found_sections = [
         section.title()
         for section in possible_sections
-        if section in resume_text.lower()
+        if section in resume_clean
     ]
 
 
@@ -494,9 +534,9 @@ if st.button(
     )
 
 
-    # -----------------------------------------------------
-    # Main Score
-    # -----------------------------------------------------
+    # =====================================================
+    # SCORE
+    # =====================================================
 
     st.markdown(
         f"""
@@ -506,7 +546,7 @@ if st.button(
             </div>
 
             <div class="score-value">
-                {score}%
+                {final_score}%
             </div>
         </div>
         """,
@@ -514,9 +554,14 @@ if st.button(
     )
 
 
-    # -----------------------------------------------------
-    # Advanced Metrics
-    # -----------------------------------------------------
+    st.progress(
+        min(final_score / 100, 1.0)
+    )
+
+
+    # =====================================================
+    # METRICS
+    # =====================================================
 
     m1, m2, m3, m4 = st.columns(4)
 
@@ -524,7 +569,7 @@ if st.button(
 
         st.metric(
             "📊 Match",
-            f"{score}%"
+            f"{final_score}%"
         )
 
     with m2:
@@ -547,17 +592,6 @@ if st.button(
             "⚠️ Missing Skills",
             len(missing_skills)
         )
-
-
-    # -----------------------------------------------------
-    # Progress
-    # -----------------------------------------------------
-
-    st.write("### 🎯 Match Progress")
-
-    st.progress(
-        min(score / 100, 1.0)
-    )
 
 
     # =====================================================
@@ -622,12 +656,12 @@ if st.button(
     else:
 
         st.info(
-            "No predefined skills detected in the job description."
+            "No predefined skills detected."
         )
 
 
     # =====================================================
-    # MISSING SKILLS
+    # MISSING
     # =====================================================
 
     st.markdown(
@@ -660,7 +694,7 @@ if st.button(
 
 
     # =====================================================
-    # RESUME STATISTICS
+    # STATISTICS
     # =====================================================
 
     st.markdown(
@@ -693,7 +727,7 @@ if st.button(
 
 
     # =====================================================
-    # RESUME SECTIONS
+    # SECTIONS
     # =====================================================
 
     st.markdown(
@@ -710,12 +744,12 @@ if st.button(
     else:
 
         st.info(
-            "No standard resume sections detected."
+            "No standard sections detected."
         )
 
 
     # =====================================================
-    # IMPROVEMENT SUGGESTIONS
+    # SUGGESTIONS
     # =====================================================
 
     st.markdown(
@@ -726,29 +760,29 @@ if st.button(
     suggestions = []
 
 
-    if score < 40:
+    if final_score < 40:
 
         suggestions.append(
             "Improve alignment between your resume and the target job description."
         )
 
-    elif score < 70:
+    elif final_score < 70:
 
         suggestions.append(
-            "Your resume has moderate similarity. Add more relevant keywords and project experience."
+            "Your resume has moderate alignment. Add relevant keywords and practical projects."
         )
 
     else:
 
         suggestions.append(
-            "Your resume has strong textual similarity with the target job description."
+            "Your resume has strong alignment with the target job description."
         )
 
 
     if missing_skills:
 
         suggestions.append(
-            "Relevant missing skills include: "
+            "Consider learning or demonstrating: "
             + ", ".join(missing_skills[:8])
             + "."
         )
@@ -757,21 +791,14 @@ if st.button(
     if word_count < 250:
 
         suggestions.append(
-            "Your resume appears short. Consider adding relevant projects, achievements or practical experience."
+            "Consider adding relevant projects, achievements or experience."
         )
 
 
-    if "projects" not in resume_text.lower():
+    if "projects" not in resume_clean:
 
         suggestions.append(
-            "Consider adding a dedicated Projects section."
-        )
-
-
-    if "experience" not in resume_text.lower():
-
-        suggestions.append(
-            "If applicable, add internships or practical experience."
+            "Add a dedicated Projects section if you have relevant projects."
         )
 
 
@@ -783,7 +810,7 @@ if st.button(
 
 
     # =====================================================
-    # OVERALL RECOMMENDATION
+    # RECOMMENDATION
     # =====================================================
 
     st.markdown(
@@ -791,36 +818,36 @@ if st.button(
         unsafe_allow_html=True
     )
 
-    if score >= 70:
+    if final_score >= 70:
 
         st.success(
-            "Your resume shows strong textual similarity with this job description."
+            "Strong resume-job alignment based on the current analysis."
         )
 
-    elif score >= 40:
+    elif final_score >= 40:
 
         st.info(
-            "Your resume shows moderate similarity. "
-            "Consider improving relevant keywords and missing skills."
+            "Moderate resume-job alignment. "
+            "Consider improving missing skills and relevant keywords."
         )
 
     else:
 
         st.warning(
-            "Your resume currently shows low textual similarity. "
+            "Low resume-job alignment. "
             "Consider improving relevant skills, keywords and project descriptions."
         )
 
 
     # =====================================================
-    # DOWNLOAD REPORT
+    # REPORT
     # =====================================================
 
     report = f"""
 AI-POWERED RESUME ANALYZER
 ==========================
 
-Resume Match Score: {score}%
+Resume Match Score: {final_score}%
 
 Keyword Coverage: {keyword_coverage}%
 
@@ -836,18 +863,18 @@ Missing Skills:
 Resume Statistics:
 Word Count: {word_count}
 Characters: {character_count}
-Sections Detected: {len(found_sections)}
+Sections: {len(found_sections)}
 
 Resume Sections:
 {", ".join(found_sections)}
 
-Recommendations:
+Improvement Suggestions:
 {chr(10).join("- " + x for x in suggestions)}
 """
 
 
     st.download_button(
-        label="📥 Download Analysis Report",
+        "📥 Download Analysis Report",
         data=report,
         file_name="resume_analysis_report.txt",
         mime="text/plain",
@@ -863,6 +890,6 @@ st.markdown("""
 <div class="footer">
     📄 AI-Powered Resume Analyzer
     <br>
-    Built with Python • Streamlit • NLP • TF-IDF • OCR
+    Python • Streamlit • NLP • TF-IDF • OCR
 </div>
 """, unsafe_allow_html=True)
